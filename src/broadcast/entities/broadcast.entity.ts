@@ -1,6 +1,8 @@
-import { Column, Entity, Index, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne } from 'typeorm';
 import { BaseEntity } from 'src/common/entities/base.entity';
 import { User } from 'src/user/entities/user.entity';
+import { BroadcastState } from './broadcast.state';
+import { BroadcastResponse } from '../dto/response/response';
 
 @Entity()
 export class Broadcast extends BaseEntity {
@@ -11,6 +13,9 @@ export class Broadcast extends BaseEntity {
   @Column({ nullable: false })
   description: string;
 
+  @Column({ unique: true, nullable: false })
+  streamKey: string;
+
   @Column({ nullable: false })
   thumbnailImageUrl: string;
 
@@ -20,8 +25,29 @@ export class Broadcast extends BaseEntity {
   @ManyToOne(() => User, user => user.broadcasts)
   user: User;
 
-  @Index()
-  @Column({ default: [], nullable: false })
+  @Column({ type: 'enum', enum: BroadcastState, default: BroadcastState.READY })
+  state: BroadcastState;
+
+  @Column({ nullable: false })
+  streamUrl: string;
+
+  @Column({ type: 'json', default: '[]', nullable: false })
   tags: string[];
 
+  toResponse() {
+    const response = new BroadcastResponse();
+    response.id = this.id;
+    response.title = this.title;
+    response.description = this.description;
+    response.streamKey = this.streamKey;
+    response.thumbnailImageUrl = this.thumbnailImageUrl;
+    response.startDate = this.startDate;
+    response.userId = this.user.id;
+    response.state = this.state;
+    response.streamUrl = this.streamUrl;
+    response.tags = this.tags;
+    response.createdAt = this.createdAt;
+    response.updatedAt = this.updatedAt;
+    return response;
+  }
 }

@@ -28,7 +28,7 @@ import { BroadcastModule } from './broadcast/broadcast.module';
     UserModule,
     BroadcastModule,
   ],
-  controllers: [AppController, BroadcastController],
-  providers: [JwtAccessStrategy, BroadcastService],
+  controllers: [AppController],
+  providers: [JwtAccessStrategy],
 })
 export class AppModule {}

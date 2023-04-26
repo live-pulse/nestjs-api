@@ -1,13 +1,14 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
-import { UserServiceUtil } from './utils/user.service.util';
 import { JwtService } from '@nestjs/jwt';
 import { UserSaveRequest } from './dto/request/save.request';
 import { UserSignInRequest } from './dto/request/sign.in.request';
 import { UserUpdateRequest } from './dto/request/update.request';
 import { UserSignInResponse } from './dto/response/sign.in.response';
 import { UserDeleteResponse } from './dto/response/delete.response';
+import { checkValid, getToken } from './utils/user.util';
+import { NotFoundException } from "@nestjs/common";
 
 export class UserService {
   constructor(
@@ -24,13 +25,14 @@ export class UserService {
 
   async signIn(request: UserSignInRequest) {
     const user = await this.userRepository.findOneBy({ account: request.account });
-    await UserServiceUtil.checkValid(user, request.password);
-    const token = await UserServiceUtil.getToken(this.jwtService, user.id);
+    await checkValid(user, request.password);
+    const token = await getToken(this.jwtService, user.id);
     return UserSignInResponse.of(token);
   }
 
   async findUser(id: number) {
     const user = await this.userRepository.findOneBy({ id: id });
+    if (!user) throw new NotFoundException('존재하지 않은 유저입니다.');
     return user.toResponse();
   }
 
