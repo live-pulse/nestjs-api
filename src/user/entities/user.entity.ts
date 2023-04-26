@@ -1,10 +1,12 @@
-import { Column, Entity } from 'typeorm';
-import { BaseEntity } from '../../common/entities/base.entity';
+import { Column, Entity, OneToMany } from 'typeorm';
+import { BaseEntity } from 'src/common/entities/base.entity';
 import { UserResponse } from '../dto/response/response';
 import { UserRole } from './user.role';
+import { Broadcast } from 'src/broadcast/entities/broadcast.entity';
 
 @Entity()
 export class User extends BaseEntity {
+
   @Column({ unique: true, nullable: false })
   account: string;
 
@@ -20,11 +22,14 @@ export class User extends BaseEntity {
   @Column({ default: 'https://cdn.hannah-log.site/profile.png' })
   userImageUrl: string;
 
-  @Column()
+  @Column({ nullable: true })
   phone: string;
 
   @Column({ type: 'enum', enum: UserRole, default: UserRole.USER })
   role: UserRole;
+
+  @OneToMany(() => Broadcast, broadcast => broadcast.user)
+  broadcasts: Broadcast[];
 
   toResponse() {
     return new UserResponse(

@@ -7,6 +7,9 @@ import { getConfig, getDataSourceConfig } from './common/database/configuration'
 import { addTransactionalDataSource } from 'typeorm-transactional';
 import { DataSource } from 'typeorm';
 import { JwtAccessStrategy } from './common/auth/jwt-access.strategy';
+import { BroadcastController } from './broadcast/broadcast.controller';
+import { BroadcastService } from './broadcast/broadcast.service';
+import { BroadcastModule } from './broadcast/broadcast.module';
 
 @Module({
   imports: [
@@ -22,9 +25,10 @@ import { JwtAccessStrategy } from './common/auth/jwt-access.strategy';
           return addTransactionalDataSource(new DataSource(getDataSourceConfig()));
         },
       }),
-    UserModule
+    UserModule,
+    BroadcastModule,
   ],
-  controllers: [AppController],
-  providers: [JwtAccessStrategy],
+  controllers: [AppController, BroadcastController],
+  providers: [JwtAccessStrategy, BroadcastService],
 })
 export class AppModule {}
