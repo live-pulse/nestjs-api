@@ -21,8 +21,8 @@ export class LoggingInterceptor implements NestInterceptor {
     return next
       .handle()
       .pipe(
-        tap(() => this.logger.log(`RequestUrl: [${request?.method || 'GraphQL'}] \'${request?.url || ''}\' Status: ${response?.statusCode || 'GraphQL'} After: ${Date.now() - now}ms form`)),
-        tap(json => this.logger.log(`Response: ${JSON.stringify(json).substring(0, 150)}... form`)),
+        tap(() => this.logger.debug(`RequestUrl: [${request?.method}] \'${request?.url || ''}\' Status: ${response?.statusCode} After: ${Date.now() - now}ms`)),
+        tap(json => this.logger.debug(`Response: ${JSON.stringify(json).substring(0, 150)}...`)),
       );
 
   }
