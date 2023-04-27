@@ -10,6 +10,8 @@ import { JwtAccessStrategy } from './common/auth/jwt-access.strategy';
 import { BroadcastController } from './broadcast/broadcast.controller';
 import { BroadcastService } from './broadcast/broadcast.service';
 import { BroadcastModule } from './broadcast/broadcast.module';
+import { StreamApiCaller } from './stream/stream-api.caller';
+import { StreamModule } from './stream/stream.module';
 
 @Module({
   imports: [
@@ -27,6 +29,7 @@ import { BroadcastModule } from './broadcast/broadcast.module';
       }),
     UserModule,
     BroadcastModule,
+    StreamModule,
   ],
   controllers: [AppController],
   providers: [JwtAccessStrategy],

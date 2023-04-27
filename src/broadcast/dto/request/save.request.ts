@@ -1,6 +1,5 @@
 import { Broadcast } from 'src/broadcast/entities/broadcast.entity';
 import { User } from 'src/user/entities/user.entity';
-import { v4 as uuid } from 'uuid';
 
 export class BroadcastSaveRequest {
   title: string;
@@ -17,7 +16,7 @@ export class BroadcastSaveRequest {
     broadcast.thumbnailImageUrl = this.thumbnailImageUrl;
     broadcast.startDate = this.startDate;
     broadcast.tags = this.tags;
-    broadcast.streamKey = uuid();
+    broadcast.streamKey = Math.random().toString(36).substring(2,11);
     broadcast.streamUrl = `${process.env.STREAM_PREFIX_URL}${broadcast.streamKey}.m3u8`
     return broadcast;
   }
