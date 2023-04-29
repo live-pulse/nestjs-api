@@ -17,7 +17,7 @@ export class BroadcastSaveRequest {
     broadcast.startDate = this.startDate;
     broadcast.tags = this.tags;
     broadcast.streamKey = Math.random().toString(36).substring(2,11);
-    broadcast.streamUrl = `${process.env.STREAM_PREFIX_URL}${broadcast.streamKey}.m3u8`
+    broadcast.streamUrl = `${process.env.STREAM_PREFIX_URL}${broadcast.streamKey}.m3u8`;
     return broadcast;
   }
 
