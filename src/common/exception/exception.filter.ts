@@ -9,14 +9,14 @@ export class GlobalExceptionFilter implements ExceptionFilter {
   catch(exception: any, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
-    const status = exception.response.statusCode;
-    const message = exception.response.message;
-    const name = exception.response.error;
+    const status = exception.response?.statusCode || 500;
+    const message = exception.response?.message;
+    const name = exception.response?.error || exception.name;
     const data = ApiResponse.ERROR(status, message, name);
     this.logger.error(exception);
 
     response
-      .status(status)
+      .status(200)
       .json(data);
   }
 
