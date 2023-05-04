@@ -37,5 +37,5 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           password: ${{ secrets.SERVER_PASSWORD }}
           script: |
-            cd /home/service/live-pulse
+            cd /home/services/live-pulse
             ./api-service-deploy.sh
