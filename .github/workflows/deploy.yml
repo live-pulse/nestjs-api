@@ -1,4 +1,4 @@
-name: Deploy NestJS Product Service App
+name: Deploy NestJS Live Pulse API Service App
 
 on:
   push:
@@ -30,7 +30,6 @@ jobs:
             ${{ secrets.DOCKER_USERNAME }}/live-pulse-api-service:latest
             ${{ secrets.DOCKER_USERNAME }}/live-pulse-api-service:${{ github.sha }}
 
-    step:
       - name: SSH into server and deploy
         uses: appleboy/ssh-action@master
         with:
