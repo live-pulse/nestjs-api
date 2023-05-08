@@ -11,10 +11,24 @@ export class BroadcastController {
     private readonly broadcastService: BroadcastService,
   ) {}
 
-  @Get('/:broadcastId')
-  async getBroadcast(@Param('broadcastId') id: number) {
-    const result = await this.broadcastService.getOne(id);
+  @Get('/:streamKey')
+  async getBroadcast(@Param('streamKey') streamKey: string) {
+    const result = await this.broadcastService.getOne(streamKey);
     return ApiResponse.SUCCESS(result);
+  }
+
+  @UseGuards(UserGuard)
+  @Post('/:streamKey/start')
+  async startBroadcast(@Param('streamKey') streamKey: string, @UserId() userId: number) {
+    await this.broadcastService.start(streamKey, userId);
+    return ApiResponse.SUCCESS();
+  }
+
+  @UseGuards(UserGuard)
+  @Post('/:streamKey/finish')
+  async finishBroadcast(@Param('streamKey') streamKey: string, @UserId() userId: number) {
+    await this.broadcastService.finish(streamKey, userId);
+    return ApiResponse.SUCCESS();
   }
 
   @UseGuards(UserGuard)

@@ -34,6 +34,18 @@ export class Broadcast extends BaseEntity {
   @Column({ type: 'json', default: '[]', nullable: false })
   tags: string[];
 
+  isReady = () => {
+    return this.state === BroadcastState.READY;
+  };
+
+  start() {
+    this.state = BroadcastState.BROADCASTING;
+  }
+
+  finish() {
+    this.state = BroadcastState.FINISHED;
+  }
+
   toResponse() {
     const response = new BroadcastResponse();
     response.id = this.id;
@@ -43,6 +55,7 @@ export class Broadcast extends BaseEntity {
     response.thumbnailImageUrl = this.thumbnailImageUrl;
     response.startDate = this.startDate;
     response.userId = this.user.id;
+    response.streamer = this.user.name;
     response.state = this.state;
     response.streamUrl = this.streamUrl;
     response.tags = this.tags;

@@ -8,6 +8,7 @@ export class BroadcastResponse {
   thumbnailImageUrl: string;
   startDate: Date;
   userId: number;
+  streamer: string;
   state: BroadcastState;
   streamUrl: string;
   tags: string[];
