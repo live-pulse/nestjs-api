@@ -8,5 +8,6 @@ import { StreamApiCaller } from './stream-api.caller';
     maxRedirects: 5,
   })],
   providers: [StreamApiCaller],
+  exports: [StreamApiCaller],
 })
 export class StreamModule {}
