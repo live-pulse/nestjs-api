@@ -1,5 +1,5 @@
-import { User } from '../../entities/user.entity';
-import { hash } from '../../../common/encode/password.encode';
+import { User } from 'src/user/entities/user.entity';
+import { hash } from 'src/common/encode/password.encode';
 
 export class UserSaveRequest {
   account: string;

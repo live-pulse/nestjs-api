@@ -1,4 +1,9 @@
-import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
+import {
+  BadRequestException,
+  ForbiddenException,
+  NotFoundException,
+  Injectable
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Broadcast } from './entities/broadcast.entity';
 import { Repository } from 'typeorm';
@@ -40,12 +45,13 @@ export class BroadcastService {
     const broadcast = await this.broadcastRepository
       .findOne({ where: { streamKey }, relations: ['user'] });
     if (broadcast.user.id !== userId) throw new ForbiddenException(
-      '방송을 시작할 수 없습니다. 로그인한 아이디로 방송을 생성해주세요.'
+      '방송을 시작할 수 없습니다. 로그인한 아이디로 방송을 시작해주세요.'
     );
     if (!broadcast.isReady) throw new BadRequestException(
       `방송을 시작할 수 없습니다. 방송은 ${broadcast.state} 상태입니다.`
     );
     broadcast.start();
+    await this.broadcastRepository.save(broadcast);
   }
 
   @Transactional()
@@ -53,9 +59,11 @@ export class BroadcastService {
     const broadcast = await this.broadcastRepository
       .findOne({ where: { streamKey }, relations: ['user'] });
     if (broadcast.user.id !== userId) throw new ForbiddenException(
-      '방송을 종료할 수 없습니다. 로그인한 아이디로 방송을 생성해주세요.'
+      '방송을 종료할 수 없습니다. 로그인한 아이디로 방송을 종료해주세요.'
     );
     broadcast.finish();
+    await this.streamApiCaller.deleteStreamKey(streamKey);
+    await this.broadcastRepository.save(broadcast);
   }
 
 }
