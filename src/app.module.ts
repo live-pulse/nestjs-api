@@ -9,6 +9,7 @@ import { DataSource } from 'typeorm';
 import { JwtAccessStrategy } from './common/auth/jwt-access.strategy';
 import { BroadcastModule } from './broadcast/broadcast.module';
 import { StreamModule } from './stream/stream.module';
+import { ChatModule } from "./chat/chat.module";
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { StreamModule } from './stream/stream.module';
     UserModule,
     BroadcastModule,
     StreamModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [JwtAccessStrategy],
