@@ -34,7 +34,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     ChatGateway.logger.debug(`Client Connected: [${client.id}] ${user}`,);
 
-    this.server.emit('sendMessage', ChatDto.of(user, streamKey));
+    this.server.emit('sendMessage', ChatDto.of(streamKey, user));
   }
 
   handleDisconnect(client: Socket): any {
