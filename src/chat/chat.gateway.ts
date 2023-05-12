@@ -34,7 +34,8 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     ChatGateway.logger.debug(`Client Connected: [${client.id}] ${user}`,);
 
-    this.server.emit('sendMessage', ChatDto.of(streamKey, user));
+    this.server.socketsJoin(streamKey);
+    this.server.to(streamKey).emit('sendMessage', ChatDto.of(streamKey, user));
   }
 
   handleDisconnect(client: Socket): any {
@@ -46,7 +47,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   @SubscribeMessage('sendMessage')
   async handleMessage(client: Socket, @MessageBody() request: ChatDto) {
     await this.cacheService.setChat(request.streamKey, request);
-    this.server.emit('sendMessage', request);
+    this.server.to(request.streamKey).emit('sendMessage', request);
   }
 
   @SubscribeMessage('getLastChat')
