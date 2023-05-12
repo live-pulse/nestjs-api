@@ -4,8 +4,8 @@ import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import {
-  getDataSourceConfig,
-  getConfig
+  DataSourceConfigProvider,
+  TypeormConfigProvider
 } from './common/database/configuration';
 import { addTransactionalDataSource } from 'typeorm-transactional';
 import { DataSource } from 'typeorm';
@@ -24,9 +24,10 @@ import { CacheModule } from './cache/cache.module';
     }),
     TypeOrmModule.forRootAsync(
       {
-        useFactory: () => getConfig(),
+        useFactory: () => TypeormConfigProvider.forRoot(),
         dataSourceFactory: async function () {
-          return addTransactionalDataSource(new DataSource(getDataSourceConfig()));
+          const dataSource = new DataSource(DataSourceConfigProvider.forRoot());
+          return addTransactionalDataSource(dataSource);
         },
       }),
     UserModule,

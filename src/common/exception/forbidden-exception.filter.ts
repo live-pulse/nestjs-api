@@ -7,7 +7,7 @@ import {
   UnauthorizedException
 } from '@nestjs/common';
 import { Response } from 'express';
-import { ApiResponse } from '../response/api.response';
+import { ApiResponse } from 'src/common/response/api.response';
 
 @Catch(UnauthorizedException)
 export class ForBiddenExceptionFilter implements ExceptionFilter {

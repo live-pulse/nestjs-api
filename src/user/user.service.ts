@@ -8,7 +8,7 @@ import { UserUpdateRequest } from './dto/request/update.request';
 import { UserSignInResponse } from './dto/response/sign.in.response';
 import { UserDeleteResponse } from './dto/response/delete.response';
 import { checkValid, getToken } from './utils/user.util';
-import { NotFoundException } from "@nestjs/common";
+import { NotFoundException } from '@nestjs/common';
 
 export class UserService {
   constructor(
@@ -31,14 +31,14 @@ export class UserService {
   }
 
   async findUser(id: number) {
-    const user = await this.userRepository.findOneBy({ id: id });
+    const user = await this.userRepository.findOneBy({ id });
     if (!user) throw new NotFoundException('존재하지 않은 유저입니다.');
     return user.toResponse();
   }
 
   async updateUser(id: number, request: UserUpdateRequest) {
-    await this.userRepository.update({ id: id }, request);
-    const user = await this.userRepository.findOneBy({ id: id });
+    await this.userRepository.update({ id }, request);
+    const user = await this.userRepository.findOneBy({ id });
     return user.toResponse();
   }
 
