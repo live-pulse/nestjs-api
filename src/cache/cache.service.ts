@@ -17,8 +17,8 @@ export class CacheService {
   }
 
   async getChat(streamKey: string) {
-    const selectValue: ChatDto[] = await this.cacheManager.get(streamKey);
-    return selectValue.slice(selectValue.length - 6, selectValue.length);
+    const selectValue: ChatDto[] | null = await this.cacheManager.get(streamKey);
+    return selectValue ? selectValue.slice(selectValue.length - 6, selectValue.length) : [];
   }
 
 }
