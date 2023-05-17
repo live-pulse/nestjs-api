@@ -28,20 +28,22 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     ChatGateway.logger.debug('Socket Server Init Complete!');
   }
 
-  handleConnection(@ConnectedSocket() client: Socket): any {
-    const user = String(client.handshake.query['user']);
-    const streamKey = String(client.handshake.query['streamKey']);
+  async handleConnection(@ConnectedSocket() client: Socket) {
+    const [user, streamKey] = this.getParams(client);
 
     ChatGateway.logger.debug(`Client Connected: [${client.id}] ${user}`,);
 
     this.server.socketsJoin(streamKey);
     this.server.to(streamKey).emit('sendMessage', ChatDto.of(streamKey, user));
+    this.server.to(streamKey).emit('connectViewer', true);
+    await this.cacheService.addViewerCount(streamKey);
   }
 
-  handleDisconnect(client: Socket): any {
-    ChatGateway.logger.debug(
-      `Client Disconnected: [${client.id}] ${client.handshake.query['user']}`,
-    );
+  async handleDisconnect(client: Socket) {
+    const [user, streamKey] = this.getParams(client);
+    ChatGateway.logger.debug(`Client Disconnected: [${client.id}] ${user}`);
+    this.server.to(streamKey).emit('disconnectViewer', true);
+    await this.cacheService.removeViewerCount(streamKey);
   }
 
   @SubscribeMessage('sendMessage')
@@ -54,7 +56,20 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   async getLastChat(client: Socket) {
     const streamKey = String(client.handshake.query['streamKey']);
     const chats = await this.cacheService.getChat(streamKey);
-    client.emit('getLastChat', chats);
+    this.server.to(streamKey).emit('getLastChat', chats);
+  }
+
+  @SubscribeMessage('getViewerCount')
+  async getViewerCount(client: Socket) {
+    const streamKey = String(client.handshake.query['streamKey']);
+    const viewerCount = await this.cacheService.getViewerCount(streamKey);
+    this.server.to(streamKey).emit('getViewerCount', viewerCount);
+  }
+
+  private getParams(client: Socket) {
+    const user = String(client.handshake.query['user']);
+    const streamKey = String(client.handshake.query['streamKey']);
+    return [user, streamKey];
   }
 
 }

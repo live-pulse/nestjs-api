@@ -16,9 +16,31 @@ export class CacheService {
     return true;
   }
 
+  async addViewerCount(streamKey: string) {
+    const key = `${streamKey}_viewer_count`;
+    const selectValue: number = await this.cacheManager.get(key);
+    const saveValue = selectValue ? selectValue + 1 : 1;
+    await this.cacheManager.set(key, saveValue);
+    return true;
+  }
+
+  async removeViewerCount(streamKey: string) {
+    const key = `${streamKey}_viewer_count`;
+    const selectValue: number = await this.cacheManager.get(key);
+    const saveValue = selectValue ? selectValue - 1 : 0;
+    await this.cacheManager.set(key, saveValue);
+    return true;
+  }
+
   async getChat(streamKey: string) {
     const selectValue: ChatDto[] | null = await this.cacheManager.get(streamKey);
     return selectValue ? selectValue.slice(selectValue.length - 6, selectValue.length) : [];
+  }
+
+  async getViewerCount(streamKey: string) {
+    const key = `${streamKey}_viewer_count`;
+    const selectValue: number = await this.cacheManager.get(key);
+    return selectValue ? selectValue : 1;
   }
 
 }
