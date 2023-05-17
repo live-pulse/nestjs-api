@@ -6,6 +6,7 @@ import { UserUpdateRequest } from './dto/request/update.request';
 import { UserId } from 'src/common/auth/user.param';
 import { ApiResponse } from 'src/common/response/api.response';
 import { UserGuard } from 'src/common/auth/user.guard';
+import { ValidateRequest } from './dto/request/validate.request';
 
 @Controller('/users')
 export class UserController {
@@ -23,6 +24,12 @@ export class UserController {
   @Post()
   async createUser(@Body() request: UserSaveRequest) {
     const result = await this.userService.create(request);
+    return ApiResponse.SUCCESS(result);
+  }
+
+  @Post('/validation')
+  async validationUser(@Body() request: ValidateRequest) {
+    const result = await this.userService.validation(request);
     return ApiResponse.SUCCESS(result);
   }
 

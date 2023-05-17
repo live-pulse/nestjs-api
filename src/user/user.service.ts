@@ -8,7 +8,8 @@ import { UserUpdateRequest } from './dto/request/update.request';
 import { UserSignInResponse } from './dto/response/sign.in.response';
 import { UserDeleteResponse } from './dto/response/delete.response';
 import { checkValid, getToken } from './utils/user.util';
-import { NotFoundException } from '@nestjs/common';
+import { ForbiddenException, NotFoundException } from "@nestjs/common";
+import { ValidateRequest } from './dto/request/validate.request';
 
 export class UserService {
   constructor(
@@ -21,6 +22,12 @@ export class UserService {
     const user = await request.toEntity();
     const resultUser = await this.userRepository.save(user);
     return resultUser.toResponse();
+  }
+
+  async validation(request: ValidateRequest) {
+    const user = await this.userRepository.findOneBy({ account: request.account });
+    if (user) throw new ForbiddenException('이미 존재하는 아이디입니다.');
+    return true;
   }
 
   async signIn(request: UserSignInRequest) {
@@ -44,7 +51,6 @@ export class UserService {
 
   async deleteUser(id: number) {
     await this.userRepository.softDelete({ id: id });
-    return new UserDeleteResponse('success delete.');
+    return new UserDeleteResponse("success delete.");
   }
-
 }
