@@ -39,7 +39,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     await this.cacheService.addViewerCount(streamKey);
   }
 
-  async handleDisconnect(client: Socket) {
+  async handleDisconnect(@ConnectedSocket() client: Socket) {
     const [user, streamKey] = this.getParams(client);
     ChatGateway.logger.debug(`Client Disconnected: [${client.id}] ${user}`);
     this.server.to(streamKey).emit('disconnectViewer', true);
@@ -47,23 +47,27 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   }
 
   @SubscribeMessage('sendMessage')
-  async handleMessage(client: Socket, @MessageBody() request: ChatDto) {
+  async handleMessage(@MessageBody() request: ChatDto) {
     await this.cacheService.setChat(request.streamKey, request);
     this.server.to(request.streamKey).emit('sendMessage', request);
   }
 
   @SubscribeMessage('getLastChat')
-  async getLastChat(client: Socket) {
+  async getLastChat(@ConnectedSocket() client: Socket) {
     const streamKey = String(client.handshake.query['streamKey']);
     const chats = await this.cacheService.getChat(streamKey);
     this.server.to(streamKey).emit('getLastChat', chats);
   }
 
   @SubscribeMessage('getViewerCount')
-  async getViewerCount(client: Socket) {
+  async getViewerCount(@ConnectedSocket() client: Socket) {
     const streamKey = String(client.handshake.query['streamKey']);
     const viewerCount = await this.cacheService.getViewerCount(streamKey);
     this.server.to(streamKey).emit('getViewerCount', viewerCount);
+  }
+
+  async sendBroadcastFinish(streamKey: string) {
+    this.server.to(streamKey).emit('broadcastFinish', true);
   }
 
   private getParams(client: Socket) {

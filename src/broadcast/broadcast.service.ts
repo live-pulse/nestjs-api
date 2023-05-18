@@ -11,6 +11,7 @@ import { BroadcastSaveRequest } from './dto/request/save.request';
 import { User } from 'src/user/entities/user.entity';
 import { StreamApiCaller } from 'src/stream/stream-api.caller';
 import { Transactional } from 'typeorm-transactional';
+import { ChatGateway } from '../chat/chat.gateway';
 
 @Injectable()
 export class BroadcastService {
@@ -21,6 +22,7 @@ export class BroadcastService {
     private readonly broadcastRepository: Repository<Broadcast>,
 
     private readonly streamApiCaller: StreamApiCaller,
+    private readonly chatGateway: ChatGateway,
   ) {}
 
   async getOne(streamKey: string) {
@@ -62,8 +64,9 @@ export class BroadcastService {
       '방송을 종료할 수 없습니다. 로그인한 아이디로 방송을 종료해주세요.'
     );
     broadcast.finish();
-    await this.streamApiCaller.deleteStreamKey(streamKey);
     await this.broadcastRepository.save(broadcast);
+    await this.streamApiCaller.deleteStreamKey(streamKey);
+    await this.chatGateway.sendBroadcastFinish(streamKey);
   }
 
 }
