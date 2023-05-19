@@ -7,7 +7,9 @@ import { UserId } from 'src/common/auth/user.param';
 import { ApiResponse } from 'src/common/response/api.response';
 import { UserGuard } from 'src/common/auth/user.guard';
 import { ValidateRequest } from './dto/request/validate.request';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('user')
 @Controller('/users')
 export class UserController {
   constructor(

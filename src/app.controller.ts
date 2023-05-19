@@ -1,14 +1,11 @@
 import { Controller, Get } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller()
+@ApiTags('ping')
 export class AppController {
   @Get('/ping')
   pingPong(): string {
     return 'pong!';
-  }
-
-  @Get()
-  getHello(): string {
-    return 'Hello World!';
   }
 }

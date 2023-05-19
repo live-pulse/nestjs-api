@@ -4,7 +4,9 @@ import { UserGuard } from 'src/common/auth/user.guard';
 import { UserId } from 'src/common/auth/user.param';
 import { BroadcastSaveRequest } from './dto/request/save.request';
 import { ApiResponse } from 'src/common/response/api.response';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('broadcast')
 @Controller('/broadcasts')
 export class BroadcastController {
   constructor(
