@@ -9,6 +9,7 @@ export class BroadcastResponse {
   startDate: Date;
   userId: number;
   streamer: string;
+  profileUrl: string;
   state: BroadcastState;
   streamUrl: string;
   tags: string[];

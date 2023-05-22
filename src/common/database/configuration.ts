@@ -14,6 +14,7 @@ export class TypeormConfigProvider {
       logging: process.env.LOGGING === 'true',
       entities: [process.env.ENTITIES],
       synchronize: process.env.SYNCHRONIZE === 'true',
+      timezone: 'Asia/Seoul',
     };
   }
 }
@@ -30,6 +31,7 @@ export class DataSourceConfigProvider {
       logging: process.env.LOGGING === 'true',
       entities: [process.env.ENTITIES],
       synchronize: process.env.SYNCHRONIZE === 'true',
+      timezone: 'Asia/Seoul',
     };
   }
 }
@@ -42,6 +44,7 @@ export class CacheManagerProvider {
       port: process.env.REDIS_PORT,
       ttl: 0,
       legacyMode: true,
+      timezone: 'Asia/Seoul',
     }
   }
 }

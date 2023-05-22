@@ -13,9 +13,28 @@ export class BroadcastController {
     private readonly broadcastService: BroadcastService,
   ) {}
 
+  @Get('/live')
+  async getLiveBroadcasts() {
+    const result = await this.broadcastService.getLiveBroadcasts();
+    return ApiResponse.SUCCESS(result);
+  }
+
+  @Get('/ready')
+  async getReadyBroadcasts() {
+    const result = await this.broadcastService.getReadyBroadcasts();
+    return ApiResponse.SUCCESS(result);
+  }
+
   @Get('/:streamKey')
   async getBroadcast(@Param('streamKey') streamKey: string) {
     const result = await this.broadcastService.getOne(streamKey);
+    return ApiResponse.SUCCESS(result);
+  }
+
+  @UseGuards(UserGuard)
+  @Post()
+  async createBroadcast(@UserId() userId: number, @Body() request: BroadcastSaveRequest) {
+    const result = await this.broadcastService.create(userId, request);
     return ApiResponse.SUCCESS(result);
   }
 
@@ -31,13 +50,6 @@ export class BroadcastController {
   async finishBroadcast(@Param('streamKey') streamKey: string, @UserId() userId: number) {
     await this.broadcastService.finish(streamKey, userId);
     return ApiResponse.SUCCESS();
-  }
-
-  @UseGuards(UserGuard)
-  @Post()
-  async createBroadcast(@UserId() userId: number, @Body() request: BroadcastSaveRequest) {
-    const result = await this.broadcastService.create(userId, request);
-    return ApiResponse.SUCCESS(result);
   }
 
 }

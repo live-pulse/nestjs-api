@@ -3,6 +3,7 @@ import { BaseEntity } from 'src/common/entities/base.entity';
 import { User } from 'src/user/entities/user.entity';
 import { BroadcastState } from './broadcast.state';
 import { BroadcastResponse } from '../dto/response/response';
+import { DateUtils } from "typeorm/util/DateUtils";
 
 @Entity()
 export class Broadcast extends BaseEntity {
@@ -53,9 +54,10 @@ export class Broadcast extends BaseEntity {
     response.description = this.description;
     response.streamKey = this.streamKey;
     response.thumbnailImageUrl = this.thumbnailImageUrl;
-    response.startDate = this.startDate;
+    response.startDate = DateUtils.mixedDateToDatetimeString(this.startDate);
     response.userId = this.user.id;
     response.streamer = this.user.name;
+    response.profileUrl = this.user.userImageUrl;
     response.state = this.state;
     response.streamUrl = this.streamUrl;
     response.tags = this.tags;

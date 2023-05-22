@@ -11,7 +11,8 @@ import { BroadcastSaveRequest } from './dto/request/save.request';
 import { User } from 'src/user/entities/user.entity';
 import { StreamApiCaller } from 'src/stream/stream-api.caller';
 import { Transactional } from 'typeorm-transactional';
-import { ChatGateway } from '../chat/chat.gateway';
+import { ChatGateway } from 'src/chat/chat.gateway';
+import { BroadcastState } from './entities/broadcast.state';
 
 @Injectable()
 export class BroadcastService {
@@ -24,6 +25,26 @@ export class BroadcastService {
     private readonly streamApiCaller: StreamApiCaller,
     private readonly chatGateway: ChatGateway,
   ) {}
+
+  async getLiveBroadcasts() {
+    const broadcasts = await this.broadcastRepository.find({
+      relations: ['user'],
+      where: { state: BroadcastState.BROADCASTING },
+      order: { streamKey: 'ASC' },
+      take: 5
+    });
+    return broadcasts.map(broadcast => broadcast.toResponse());
+  }
+
+  async getReadyBroadcasts() {
+    const broadcasts = await this.broadcastRepository.find({
+      relations: ['user'],
+      where: { state: BroadcastState.READY },
+      order: { streamKey: 'ASC' },
+      take: 5
+    });
+    return broadcasts.map(broadcast => broadcast.toResponse());
+  }
 
   async getOne(streamKey: string) {
     const broadcast = await this.broadcastRepository
