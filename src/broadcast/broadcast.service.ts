@@ -67,6 +67,7 @@ export class BroadcastService {
   async start(streamKey: string, userId: number) {
     const broadcast = await this.broadcastRepository
       .findOne({ where: { streamKey }, relations: ['user'] });
+    if (!broadcast) throw new NotFoundException('존재하지 않은 방송입니다.');
     if (broadcast.user.id !== userId) throw new ForbiddenException(
       '방송을 시작할 수 없습니다. 로그인한 아이디로 방송을 시작해주세요.'
     );
@@ -75,12 +76,14 @@ export class BroadcastService {
     );
     broadcast.start();
     await this.broadcastRepository.save(broadcast);
+    await this.chatGateway.sendBroadcastStart(streamKey);
   }
 
   @Transactional()
   async finish(streamKey: string, userId: number) {
     const broadcast = await this.broadcastRepository
       .findOne({ where: { streamKey }, relations: ['user'] });
+    if (!broadcast) throw new NotFoundException('존재하지 않은 방송입니다.');
     if (broadcast.user.id !== userId) throw new ForbiddenException(
       '방송을 종료할 수 없습니다. 로그인한 아이디로 방송을 종료해주세요.'
     );

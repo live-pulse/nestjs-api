@@ -66,6 +66,10 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     this.server.to(streamKey).emit('getViewerCount', viewerCount);
   }
 
+  async sendBroadcastStart(streamKey: string) {
+    this.server.to(streamKey).emit('broadcastStart', true);
+  }
+
   async sendBroadcastFinish(streamKey: string) {
     this.server.to(streamKey).emit('broadcastFinish', true);
   }
