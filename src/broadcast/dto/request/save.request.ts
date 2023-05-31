@@ -1,14 +1,19 @@
 import { Broadcast } from 'src/broadcast/entities/broadcast.entity';
 import { User } from 'src/user/entities/user.entity';
+import { Type } from 'class-transformer';
+import { IsDate } from 'class-validator';
 
 export class BroadcastSaveRequest {
   title: string;
   description: string;
   thumbnailImageUrl: string;
+  @Type(() => Date)
+  @IsDate()
   startDate: Date;
   tags: string[];
 
   toEntity(user: User) {
+    this.startDate.setHours(this.startDate.getHours() + 9);
     const broadcast = new Broadcast();
     broadcast.title = this.title;
     broadcast.description = this.description;

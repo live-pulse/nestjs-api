@@ -8,7 +8,7 @@ import { UserUpdateRequest } from './dto/request/update.request';
 import { UserSignInResponse } from './dto/response/sign.in.response';
 import { UserDeleteResponse } from './dto/response/delete.response';
 import { checkValid, getToken } from './utils/user.util';
-import { ForbiddenException, NotFoundException } from "@nestjs/common";
+import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { ValidateRequest } from './dto/request/validate.request';
 
 export class UserService {

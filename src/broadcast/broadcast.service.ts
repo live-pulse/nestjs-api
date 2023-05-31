@@ -57,6 +57,7 @@ export class BroadcastService {
   async create(userId: number, request: BroadcastSaveRequest) {
     const user = await this.userRepository.findOneBy({ id: userId });
     if (!user) throw new NotFoundException('존재하지 않은 사용자입니다.');
+    console.log(request)
     const broadcast = request.toEntity(user);
     const resultBroadcast = await this.broadcastRepository.save(broadcast);
     await this.streamApiCaller.createStreamKey(resultBroadcast.streamKey);

@@ -2,8 +2,7 @@ import { Column, Entity, ManyToOne } from 'typeorm';
 import { BaseEntity } from 'src/common/entities/base.entity';
 import { User } from 'src/user/entities/user.entity';
 import { BroadcastState } from './broadcast.state';
-import { BroadcastResponse } from '../dto/response/response';
-import { DateUtils } from "typeorm/util/DateUtils";
+import { BroadcastResponse } from 'src/broadcast/dto/response/response';
 
 @Entity()
 export class Broadcast extends BaseEntity {
@@ -54,7 +53,7 @@ export class Broadcast extends BaseEntity {
     response.description = this.description;
     response.streamKey = this.streamKey;
     response.thumbnailImageUrl = this.thumbnailImageUrl;
-    response.startDate = DateUtils.mixedDateToDatetimeString(this.startDate);
+    response.startDate = this.startDate;
     response.userId = this.user.id;
     response.streamer = this.user.name;
     response.profileUrl = this.user.userImageUrl;
